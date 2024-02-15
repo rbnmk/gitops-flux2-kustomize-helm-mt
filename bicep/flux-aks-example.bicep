@@ -1,6 +1,6 @@
 param location string = resourceGroup().location
 
-resource managedClusters 'Microsoft.ContainerService/managedClusters@2021-08-01' = [for i in range(0,3): {
+resource managedClusters 'Microsoft.ContainerService/managedClusters@2021-08-01' = [for i in range(0, 3): {
   name: 'bicep-cluster${i}'
   location: location
   identity: {
@@ -21,7 +21,7 @@ resource managedClusters 'Microsoft.ContainerService/managedClusters@2021-08-01'
   }
 }]
 
-resource fluxExtensions 'Microsoft.KubernetesConfiguration/extensions@2022-03-01' = [for i in range(0,3): {
+resource fluxExtensions 'Microsoft.KubernetesConfiguration/extensions@2022-03-01' = [for i in range(0, 3): {
   name: 'flux'
   properties: {
     extensionType: 'microsoft.flux'
@@ -29,11 +29,11 @@ resource fluxExtensions 'Microsoft.KubernetesConfiguration/extensions@2022-03-01
   scope: managedClusters[i]
 }]
 
-resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2022-03-01' = [for i in range(0,3): {
+resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2022-03-01' = [for i in range(0, 3): {
   name: 'bicep-fluxconfig'
   properties: {
     scope: 'cluster'
-    namespace: 'cluster-config'
+    namespace: 'service-flux'
     sourceKind: 'GitRepository'
     gitRepository: {
       url: 'https://github.com/Azure/gitops-flux2-kustomize-helm-mt'
